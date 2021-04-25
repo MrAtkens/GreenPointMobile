@@ -1,0 +1,14 @@
+{
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "strict": true,
+    "baseUrl": "src",
+    "paths": {
+      "containers": ["./src/containers"],
+      "constants": ["./src/constants"],
+      "hooks": ["./src/hooks"],
+      "stores": ["./src/stores"]
+    }
+  }
+}
