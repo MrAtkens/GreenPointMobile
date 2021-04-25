@@ -12,11 +12,11 @@ import images from "../../constants/images";
 
 const SLIDER_WIDTH = Dimensions.get('window').width;
 const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.8);
-const ITEM_HEIGHT = Math.round(ITEM_WIDTH * 3 / 4);
 
 const MyComments = observer(() => {
     useEffect(() => {
-        systemStore.getMyComments()
+        if(systemStore.user.isAuthenticated)
+            systemStore.getMyComments()
     },[])
 
     const renderComment = ({ item }:any) => {
@@ -26,17 +26,17 @@ const MyComments = observer(() => {
                 <View style={styles.header}>
                     <Image source={images.pin}/>
                     <View style={styles.commentDetail}>
-                        <Text style={FONTS.h2}>Header</Text>
-                        <Text style={FONTS.h4}>date</Text>
+                        <Text style={[FONTS.h2, {fontWeight: "bold"}]}>Header</Text>
+                        <Text style={FONTS.h4}>{item.creationDate}</Text>
                     </View>
                     <View style={styles.likeContainer}>
-                        <Icon size={15} name='like1' type='ant-design' style={{marginHorizontal: 5}}
+                        <Icon size={25} name='like1' type='ant-design' style={{marginHorizontal: 5}}
                               color={COLORS.primary} />
-                        <Text style={FONTS.body4}>likes</Text>
+                        <Text style={[FONTS.body3, {fontWeight: "bold"}]}>{item.likes}</Text>
                     </View>
                 </View>
                 <View style={styles.comment}>
-                    <Text style={FONTS.body2}></Text>
+                    <Text style={FONTS.body2}>{item.text}</Text>
                 </View>
             </View>
         )
@@ -45,15 +45,19 @@ const MyComments = observer(() => {
     return(
         <View style={styles.container}>
             <View style={styles.commentContainer}>
-                <Carousel
-                    data={systemStore.myComments}
-                    firstItem={systemStore.myComments.length-1}
-                    renderItem={renderComment}
-                    sliderWidth={SLIDER_WIDTH}
-                    itemWidth={ITEM_WIDTH}
-                    layout={'tinder'} layoutCardOffset={9}
-                    useScrollView={true}
-                />
+                {systemStore.user.isAuthenticated ? (systemStore.myComments.length !== 0 ? (
+                    <Carousel
+                        data={systemStore.myComments}
+                        firstItem={systemStore.myComments.length-1}
+                        renderItem={renderComment}
+                        sliderWidth={SLIDER_WIDTH}
+                        itemWidth={ITEM_WIDTH}
+                        layout={'tinder'} layoutCardOffset={9}
+                        style={{marginRight: 20}}
+                        useScrollView={true}
+                    />
+                ) : (<Text style={[FONTS.h2,{margin:30, textAlign: "center", fontWeight: "bold"}]}>У вас нет оставленных комментарийr</Text>)
+                ) : (<Text style={[FONTS.h2,{margin:30, textAlign: "center", fontWeight: "bold"}]}>Вы не зашли в систему</Text>)}
             </View>
         </View>
     )
@@ -61,37 +65,40 @@ const MyComments = observer(() => {
 
 const styles = StyleSheet.create({
     container: {
-        padding:10,
-        display:"flex",
-        flexDirection: "column"
+        flex: 1,
+        flexDirection: "column",
     },
     commentContainer:{
         margin: 10
     },
     card:{
-        width: "100%",
+        width: "90%",
         height: "60%",
         borderColor: COLORS.darkgray,
-        borderWidth: 2
+        borderWidth: 2,
+        backgroundColor: COLORS.white
     },
     header:{
         flexDirection: "row",
-        flex: 1,
     },
     commentDetail:{
-        flex: 2,
         flexDirection: "column",
-        justifyContent:"flex-start"
+        justifyContent:"flex-start",
+        marginHorizontal: 10,
+        marginVertical: 10
     },
     likeContainer:{
-        flex: 3,
-        padding: 20,
         borderColor: COLORS.darkgray,
-        borderWidth: 2,
-        justifyContent:"center"
+        borderStartWidth: 2,
+        borderBottomWidth: 2,
+        right:0,
+        padding: 10,
+        position:"absolute",
+        justifyContent:"center",
+        alignItems: "center"
     },
     comment:{
-        margin: 20
+        margin: 10
     }
 
 });

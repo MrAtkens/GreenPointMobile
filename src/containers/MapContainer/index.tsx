@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useContext} from 'react';
-import {AsyncStorage, Dimensions, StyleSheet, View} from 'react-native';
+import {Dimensions, StyleSheet, View} from 'react-native';
 import MapView, {Marker} from 'react-native-maps';
 import {observer} from "mobx-react-lite";
 import {COLORS} from "constants/index";
@@ -7,7 +7,6 @@ import mapStore from 'stores/mapStore'
 import * as Location from 'expo-location';
 import images from "../../constants/images";
 import * as SecureStore from "expo-secure-store";
-
 
 const MapContainer = observer(({userLocation, onChangeLocation, markerOpen} : any) =>{
     const [spots, setSpots] = useState([])
@@ -43,7 +42,9 @@ const MapContainer = observer(({userLocation, onChangeLocation, markerOpen} : an
 
     useEffect(() => {
         const interval = setInterval(() => {
-            mapStore.getNearestSpot(userLocation.latitude, userLocation.longitude)
+            mapStore.getNearestSpot(userLocation.latitude, userLocation.longitude).then(() => {
+
+            })
         }, 10000*6);
         return () => clearInterval(interval);
     });

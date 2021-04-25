@@ -143,7 +143,7 @@ class SystemStore implements ISystem{
     async like(spotId: string, commentId: string){
         const response = await accountService.likeComment(spotId, commentId);
         console.log(response)
-        if(response.status === 200){
+        if(response.status === 204){
             await SecureStore.setItemAsync(commentId, "TRUE")
         }
     }

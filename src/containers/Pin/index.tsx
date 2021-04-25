@@ -19,11 +19,17 @@ const ITEM_HEIGHT = Math.round(ITEM_WIDTH * 3 / 4);
 
 const Pin = observer(() => {
 
-    const isLike = async(commentId: string) => {
-        const state = await SecureStore.getItemAsync(commentId)
-        console.log("PIZDEC")
+    const isLike = async(id: string) => {
+        const state = await SecureStore.getItemAsync(id);
         console.log(state)
-        return state === "TRUE";
+        return state === 'TRUE';
+    }
+
+
+    const onLike = (spotId: string, commentId: string) => {
+        systemStore.like(spotId, commentId).then(()=> {
+            mapStore.updateComments(spotId)
+        })
     }
 
     const renderItem = ({ item }:any) => {
@@ -61,17 +67,19 @@ const Pin = observer(() => {
                         </View>
                         <Text style={FONTS.body4}>{item.creationDate}</Text>
                     </View>
-                    <View style={styles.actions}>
-                        <Button
-                            buttonStyle={systemStore.buttonState === buttonStates.ACCOUNT ? styles.buttonAlternative : styles.button}
-                            containerStyle={[styles.buttonContainer, t.shadow]}
-                            icon={<Icon size={SIZES.comment_icon} name='like1' type='ant-design'
-                                        color={systemStore.buttonState === buttonStates.ACCOUNT ? COLORS.white : COLORS.primary} />}
-                            loadingProps={{ animating: true }}
-                            loadingStyle={{}}
-                            onPress={() => systemStore.like(mapStore.spot.id, item.id)}
-                        />
-                    </View>
+                    {isLike(item.id) && (
+                        <View style={styles.actions}>
+                            <Button
+                                buttonStyle={systemStore.buttonState === buttonStates.ACCOUNT ? styles.buttonAlternative : styles.button}
+                                containerStyle={[styles.buttonContainer, t.shadow]}
+                                icon={<Icon size={SIZES.comment_icon} name='like1' type='ant-design'
+                                            color={COLORS.primary} />}
+                                loadingProps={{ animating: true }}
+                                loadingStyle={{}}
+                                onPress={() => onLike(mapStore.spot.id, item.id)}
+                            />
+                        </View>
+                    )}
                 </View>
             </View>
         );

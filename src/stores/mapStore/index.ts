@@ -76,6 +76,11 @@ class MapStore implements IMap{
         }
     }
 
+    async updateComments(id: string){
+        const responseComments = await commentService.getCommentById(id);
+        this.setComment(responseComments.data)
+    }
+
     async getNearestSpot(lat: number, lng: number){
         const response = await spotService.getNearSpots(lng, lat);
         console.log(response)
