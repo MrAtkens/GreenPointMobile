@@ -44,7 +44,7 @@ const MapContainer = observer(({userLocation, onChangeLocation, markerOpen} : an
     useEffect(() => {
         const interval = setInterval(() => {
             mapStore.getNearestSpot(userLocation.latitude, userLocation.longitude)
-        }, 10000*12);
+        }, 10000*6);
         return () => clearInterval(interval);
     });
 

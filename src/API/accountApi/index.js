@@ -38,9 +38,9 @@ const userGetData = async () => {
 }
 
 const likeComment = async (spotId, commentId) => {
-  return await axios.post(`${URL_USER}/spots/${spotId}/comments/${commentId}/likes`, {headers:
+  return await axios.post(`${URL_USER}/spots/${spotId}/comments/${commentId}/likes`, {},{headers:
         { Authorization: `Bearer ${await SecureStore.getItemAsync('jwt_token')}` }}).then(response => {
-          console.log(response)
+    console.log(response)
     return response
   }).catch(error => {
     return error.response

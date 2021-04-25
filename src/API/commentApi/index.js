@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { URL_USER } from '../settings'
+import * as SecureStore from "expo-secure-store";
 
 axios.defaults.withCredentials = true
 
@@ -24,7 +25,8 @@ const addComment = async (id, text, longitude, latitude) => {
 }
 
 const getComments = async () => {
-  return await axios.get(`${URL_USER}/api/comments`).then(response => {
+  return await axios.get(`${URL_USER}/api/comments`, {headers:
+        { Authorization: `Bearer ${await SecureStore.getItemAsync('jwt_token')}` }}).then(response => {
     return response
   }).catch(error => {
     return error.response

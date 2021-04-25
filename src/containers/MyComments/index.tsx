@@ -17,13 +17,13 @@ const ITEM_HEIGHT = Math.round(ITEM_WIDTH * 3 / 4);
 const MyComments = observer(() => {
     useEffect(() => {
         systemStore.getMyComments()
-    })
+    },[])
 
     const renderComment = ({ item }:any) => {
         console.log(item)
         return(
             <View style={styles.card}>
-                <View style={[styles.header]}>
+                <View style={styles.header}>
                     <Image source={images.pin}/>
                     <View style={styles.commentDetail}>
                         <Text style={FONTS.h2}>Header</Text>
@@ -34,6 +34,9 @@ const MyComments = observer(() => {
                               color={COLORS.primary} />
                         <Text style={FONTS.body4}>likes</Text>
                     </View>
+                </View>
+                <View style={styles.comment}>
+                    <Text style={FONTS.body2}></Text>
                 </View>
             </View>
         )
@@ -86,6 +89,9 @@ const styles = StyleSheet.create({
         borderColor: COLORS.darkgray,
         borderWidth: 2,
         justifyContent:"center"
+    },
+    comment:{
+        margin: 20
     }
 
 });
