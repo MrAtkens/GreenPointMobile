@@ -1,11 +1,12 @@
-import React, {useEffect, useState} from 'react';
-import {StyleSheet, View} from 'react-native';
+import React, {useEffect, useRef, useState} from 'react';
+import {Platform, StyleSheet, View} from 'react-native';
 import * as SecureStore from 'expo-secure-store';
-import {Text} from "react-native-elements";
 import {observer} from "mobx-react-lite";
 import Toast from 'react-native-toast-message';
 
-import {MapContainer, BottomNavigation, Header, HalfModal, AccountModal, PinModal} from 'containers/index'
+import * as Location from "expo-location";
+
+import {MapContainer, BottomNavigation, Header, HalfModal, AccountModal, PinModal, Pin} from 'containers/index'
 import systemStore  from "stores/systemStore";
 import mapStore  from "stores/mapStore";
 import MyComments from "./src/containers/MyComments";
@@ -21,6 +22,7 @@ const App = observer(() =>{
         latitudeDelta: 0.01,
         longitudeDelta: 0.01
     })
+
     const onClose = () => {
         setVisible(false)
     }
@@ -29,7 +31,7 @@ const App = observer(() =>{
         setVisiblePin(false)
     }
 
-    const onOpen = (header : string) => {
+    const onOpen = (header) => {
         switch (header){
             case 'Аккаунт':
                 const children = (<AccountModal/>)
@@ -49,17 +51,26 @@ const App = observer(() =>{
     }
 
     useEffect(() => {
+        const interval = setInterval(async () => {
+            let location = await Location.getCurrentPositionAsync({});
+            mapStore.getNearestSpot(location.coords.latitude, location.coords.longitude)
+        }, 10000*3);
+        return () => clearInterval(interval);
+    });
+
+
+    useEffect(() => {
         const getLng = async() => {
             const lng =  await SecureStore.getItemAsync('lng')
             console.log(lng)
             if(lng !== null)
-                setUserLocation({longitude: JSON.parse(lng as string), latitude: userLocation.latitude, latitudeDelta: userLocation.latitudeDelta, longitudeDelta: userLocation.longitudeDelta})
+                setUserLocation({longitude: JSON.parse(lng), latitude: userLocation.latitude, latitudeDelta: userLocation.latitudeDelta, longitudeDelta: userLocation.longitudeDelta})
         }
 
         const getLat = async() => {
             const lat =  await SecureStore.getItemAsync('lat')
             if(lat !== null)
-                setUserLocation({latitude: JSON.parse(lat as string), longitude: userLocation.longitude, latitudeDelta: userLocation.latitudeDelta, longitudeDelta: userLocation.longitudeDelta})
+                setUserLocation({latitude: JSON.parse(lat), longitude: userLocation.longitude, latitudeDelta: userLocation.latitudeDelta, longitudeDelta: userLocation.longitudeDelta})
         }
         getLng()
         getLat()

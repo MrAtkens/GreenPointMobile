@@ -1,7 +1,7 @@
 import { Icon, Text } from 'react-native-elements'
-import React, {ReactElement, useState} from 'react'
+import React, {ReactElement} from 'react'
 import {
-    SafeAreaView, ScrollView,
+    SafeAreaView,
     StyleSheet,
     TouchableOpacity,
     View,
@@ -12,23 +12,13 @@ import {SIZES} from "../../constants";
 import Pin from "../Pin";
 
 type ModalProps = {
+    children: ReactElement
     onClose: () => void
     visible: boolean
     header?: string
 }
 
 const PinModal = (props: ModalProps) => {
-    const [scrollOffset, setScrollOffset] = useState();
-    const scrollViewRef = React.createRef<ScrollView>();
-
-    const handleOnScroll = (event: any) => {
-        setScrollOffset(event.nativeEvent.contentOffset.y)
-    };
-    const handleScrollTo = (p:any) => {
-        if (scrollViewRef.current) {
-            scrollViewRef.current.scrollTo(p);
-        }
-    };
 
     const Header = () => (
         <View style={styles.header}>

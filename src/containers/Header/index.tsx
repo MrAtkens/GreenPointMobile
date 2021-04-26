@@ -1,16 +1,15 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Image, View} from 'react-native';
 import {observer} from "mobx-react-lite";
 import {COLORS, SIZES, images} from "../../constants/index";
-import { Image } from 'react-native-elements';
 
 const Header = observer(() =>{
     return (
         <View style={styles.container}>
-            <View style={styles.headerViewCard}>
+            <View style={styles.headerView}>
                 <Image
                     source={images.logo}
-                    style={styles.image}
+                    style={styles.logoImage}
                 />
             </View>
         </View>
@@ -26,10 +25,10 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center"
     },
-    headerViewCard: {
+    headerView: {
         width: SIZES.width * 0.9,
         paddingVertical: SIZES.padding * 0.5,
-        paddingHorizontal: SIZES.padding * 1,
+        paddingHorizontal: SIZES.padding * 2,
         borderRadius: SIZES.radius - 15,
         backgroundColor: COLORS.white,
         shadowColor: "#000",
@@ -46,7 +45,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center"
     },
-    image:{
+    logoImage:{
         width: 85,
         height: 40,
         marginHorizontal: SIZES.width * 0.3

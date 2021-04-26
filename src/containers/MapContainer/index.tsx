@@ -8,6 +8,7 @@ import * as Location from 'expo-location';
 import images from "../../constants/images";
 import * as SecureStore from "expo-secure-store";
 
+
 const MapContainer = observer(({userLocation, onChangeLocation, markerOpen} : any) =>{
     const [spots, setSpots] = useState([])
     const userLocationFind = async () => {
@@ -39,15 +40,6 @@ const MapContainer = observer(({userLocation, onChangeLocation, markerOpen} : an
             await userLocationFind()
         })
     },[])
-
-    useEffect(() => {
-        const interval = setInterval(() => {
-            mapStore.getNearestSpot(userLocation.latitude, userLocation.longitude).then(() => {
-
-            })
-        }, 10000*6);
-        return () => clearInterval(interval);
-    });
 
     return (
         <View style={styles.container}>

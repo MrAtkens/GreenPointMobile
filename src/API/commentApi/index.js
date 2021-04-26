@@ -17,7 +17,8 @@ const addComment = async (id, text, longitude, latitude) => {
     text: text,
     longitude: longitude,
     latitude: latitude
-  }).then(response => {
+  }, {headers:
+        { Authorization: `Bearer ${await SecureStore.getItemAsync('jwt_token')}` }}).then(response => {
     return response
   }).catch(error => {
     return error.response

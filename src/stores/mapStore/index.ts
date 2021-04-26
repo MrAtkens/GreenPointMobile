@@ -1,8 +1,8 @@
-import {action, computed, makeAutoObservable, observable} from "mobx";
+import { makeAutoObservable } from "mobx";
 // @ts-ignore
 import { spotService } from 'API';
-import {createContext} from "react";
 import {commentService} from "../../API/commentApi";
+import PushNotification from "react-native-push-notification";
 
 
 export interface IMap {
@@ -24,7 +24,9 @@ export interface IMap {
         title: string,
         details: string,
         images: any
-    }
+    },
+    isNear: string,
+    isOpen: boolean
 }
 
 class MapStore implements IMap{
@@ -47,6 +49,8 @@ class MapStore implements IMap{
         details: "",
         images: []
     }
+    isNear = ""
+    isOpen = false
 
     constructor() {
         makeAutoObservable(this)
@@ -76,6 +80,15 @@ class MapStore implements IMap{
         }
     }
 
+    async addComment(text:string){
+        const response = await commentService.addComment(this.spot.id, text, this.spot.longitude, this.spot.latitude);
+        console.log(response.status)
+        if(response.status === 204){
+            this.setIsNear("")
+            this.setIsOpen(false)
+        }
+    }
+
     async updateComments(id: string){
         const responseComments = await commentService.getCommentById(id);
         this.setComment(responseComments.data)
@@ -83,12 +96,13 @@ class MapStore implements IMap{
 
     async getNearestSpot(lat: number, lng: number){
         const response = await spotService.getNearSpots(lng, lat);
-        console.log(response)
+        console.log(response.data)
         if(response.status === 404){
-
+            this.setIsNear("")
         }
         else if(response.status === 200){
             this.setNearSpot(response.data)
+            this.setIsNear(response.data.id)
         }
     }
 
@@ -105,6 +119,14 @@ class MapStore implements IMap{
     }
     setIsLoading(state: boolean){
         this.isLoading = state
+    }
+
+    setIsNear(id: string){
+        this.isNear = id
+    }
+
+    setIsOpen(state: boolean){
+        this.isOpen = state
     }
 
     setComment(comments: any){
